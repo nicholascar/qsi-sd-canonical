@@ -1,0 +1,19 @@
+<sh-03>
+	a sh:NodeShape ;
+	sh:targetObjectsOf addr:hasAddressComponent ; # addr:AddressComponent instances
+	sh:sparql [
+		a sh:SPARQLConstraint ;
+		sh:message "Instances of isov1:locality must indicate their class as either super:AdministrativeArea of a sub class of it" ;
+		sh:prefixes addr: , super: ;
+		sh:select """
+			SELECT $this ?value
+			WHERE {
+                $this addr:hasComponentType isov1:locality .
+                $this addr:hasValue ?value .
+                FILTER NOT EXISTS {
+                    ?value a super:AdministrativeArea .
+                }
+			}
+			""" ;
+	] ;
+.

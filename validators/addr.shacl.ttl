@@ -4,6 +4,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX sdo: <https://schema.org/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX super: <https://w3id.org/profile/qsi-supermodel/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 BASE <http://w3id.org/profile/anz-address/validator/>
@@ -47,13 +48,21 @@ addr:validator
 	sh:sparql [
 		a sh:SPARQLConstraint ;
 		sh:message "The hasValue property of an AddressComponent with addressComponentType isov1:locality must indicate an IRI (of a Concept from a vocabulary), not text" ;
-		sh:prefixes addr: ;
+		sh:prefixes addr: , super: ;
 		sh:select """
 			SELECT $this ?value
 			WHERE {
-                $this addr:hasComponentType isov1:locality .
-                $this addr:hasValue ?value .
-                FILTER (!isIRI(?value))
+			    {
+                    $this addr:hasComponentType isov1:locality .
+                    $this addr:hasValue ?value .
+                    FILTER (!isIRI(?value))
+			    }
+			    UNION
+			    {
+                    $this addr:hasComponentType isov1:state .
+                    $this addr:hasValue ?value .
+                    FILTER (!isIRI(?value))
+			    }
 			}
 			""" ;
 	] ;

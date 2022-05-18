@@ -8,6 +8,7 @@ PREFIX ex: <http://example.com/>
 PREFIX isov1: <http://def.isotc211.org/iso19160/-1/2015/Address/code/AddressComponentType/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX role: <http://w3id.org/profile/anz-address/address-roles/>
+PREFIX super: <https://w3id.org/profile/qsi-supermodel/>
 
 # Nicholas Car's address is 20 Oxford Place, Shorncliffe, QLD 4017
 ex:addr-1
@@ -15,6 +16,11 @@ ex:addr-1
     addr:hasAddressRole role:streetAddress ;
     addr:hasAddressFormality ex:localAlias ; # ex:jurisdictionallyAllocated ;
     addr:hasAddressComponent
+    [
+        addr:hasValue <http://example.com/state/4> ;
+        addr:hasValueText "Queensland" ;
+        addr:hasComponentType isov1:state ;
+    ] ,
     [
         addr:hasValue 20 ;
         addr:hasComponentType isov1:streetNumber ;
@@ -32,5 +38,13 @@ ex:addr-1
         # invalid: this hasValue must be a reference to a object, not a literal
         addr:hasValue "Shorncliffe" ;
         addr:hasComponentType isov1:locality ;
+    ] ,
+    [
+        addr:hasValue 4017 ;
+        addr:hasComponentType isov1:postcode ;
     ] ;
 .
+
+<http://example.com/lga/1234> a ex:Locality .
+
+ex:Locality rdfs:subClassOf super:AdministrativeArea .
