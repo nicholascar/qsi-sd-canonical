@@ -1,0 +1,33 @@
+# Canonical Example file R18-v01 (valid)
+
+PREFIX addr: <http://w3id.org/profile/anz-address/>
+PREFIX ex: <http://example.com/>
+PREFIX isov1: <http://def.isotc211.org/iso19160/-1/2015/Address/code/AddressComponentType/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX role: <http://w3id.org/profile/anz-address/address-roles/>
+
+# Nicholas Car's address is 20 Oxford Place, Shorncliffe, QLD 4017
+ex:addr-1
+    a addr:Address ;
+    addr:hasAddressRole role:streetAddress ;
+    addr:hasAddressFormality ex:localAlias ; # ex:jurisdictionallyAllocated ;
+    addr:hasAddressComponent
+    [
+        addr:hasValue 20 ;
+        addr:hasComponentType isov1:streetNumber ;
+    ] ,
+    [
+        addr:hasValue "Oxford" ;
+        addr:hasComponentType isov1:thoroughfareName ;
+    ] ,
+    [
+        addr:hasValue ex:Place ;
+        addr:hasValueText "Place" ;
+        addr:hasComponentType isov1:thoroughfareType ;
+    ] ,
+    [
+        addr:hasValue <http://example.com/lga/1234> ;
+        addr:hasValueText "Shorncliffe" ;
+        addr:hasComponentType isov1:locality ;
+    ] ;
+.

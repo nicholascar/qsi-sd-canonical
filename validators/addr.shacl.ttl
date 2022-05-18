@@ -1,0 +1,60 @@
+PREFIX addr: <http://w3id.org/profile/anz-address/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX sdo: <https://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+BASE <http://w3id.org/profile/anz-address/validator/>
+
+addr:validator
+	a owl:Ontology ;
+  	skos:prefLabel "ANZ National Address Model - Candidate - RDF Shapes Validator"@en ;
+	skos:definition """This is a [Shapes Constraint Language (SHACL)](https://www.w3.org/TR/shacl/) file that specifies constraints for RDF data. It can be used to test the conformance of data to the ANZ National Address Model - Candidate."""@en ;
+	sdo:publisher <https://orcid.org/0000-0002-8742-7730> ;
+	sdo:creator <https://orcid.org/0000-0002-8742-7730> ;
+	sdo:dateCreated "2022-05-18"^^xsd:date ;
+	sdo:dateModified "2022-05-18"^^xsd:date ;
+    sdo:license "https://www.ogc.org/license"^^xsd:anyURI ;
+	sdo:rights "(c) 2022 Nicholas CJ. ar" ;
+	owl:versionInfo "1.0" ;
+	owl:versionIRI addr:1.0 ;
+.
+
+<https://orcid.org/0000-0002-8742-7730>
+    a sdo:Person ;
+    sdo:name "Nicholas J. Car" ;
+    sdo:email "nick@kurrawong.net"^^xsd:anyURI ;
+.
+
+<sh-01>
+    a sh:NodeShape ;
+	sh:targetObjectsOf addr:hasAddressComponent ; # addr:AddressComponent instances
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path addr:hasComponentType ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Address Components' types must be indicated by an IRI (of a Concept from a vocabulary)" ;
+        sh:minCount 1 ;
+        sh:maxCount 1;
+    ] ;
+.
+
+<sh-02>
+	a sh:NodeShape ;
+	sh:targetObjectsOf addr:hasAddressComponent ; # addr:AddressComponent instances
+	sh:sparql [
+		a sh:SPARQLConstraint ;
+		sh:message "The hasValue property of an AddressComponent with addressComponentType isov1:locality must indicate an IRI (of a Concept from a vocabulary), not text" ;
+		sh:prefixes addr: ;
+		sh:select """
+			SELECT $this ?value
+			WHERE {
+                $this addr:hasComponentType isov1:locality .
+                $this addr:hasValue ?value .
+                FILTER (!isIRI(?value))
+			}
+			""" ;
+	] ;
+.
